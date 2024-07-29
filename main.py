@@ -1,5 +1,6 @@
 """DOCS"""
 import os
+import json
 import requests
 from dotenv import load_dotenv
 
@@ -63,9 +64,17 @@ class GitHubSearcher:
         self.token = token
 
     @staticmethod
-    def write_to_file(response):
+    def read_file():
         """DOCS"""
         file_name = "response.json"
+        try:
+            with open(file_name, "r", encoding="utf-8") as file:
+                json_data = json.load(file)
+        except Exception as error:
+            print(f"ERROR: writing on {file_name}")
+            raise Exception(error)
+        return json_data["items"]
+
         try:
             with open(file_name, "w") as file:
                 file.write(response.text)
