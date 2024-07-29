@@ -104,6 +104,47 @@ class GitHubSearcher:
         location = response.headers["location"]
         return location
 
+    def fork(self, owner_name, repo_name) -> bool:
+        """DOCS"""
+
+        url = f"https://api.github.com/repos/{owner_name}/{repo_name}/forks"
+        headers = {
+            "Authorization": f"Bearer {self.token}",
+            "Accept": "application/vnd.github+json",
+            "X-GitHub-Api-Version": "2022-11-28",
+        }
+        data = {
+            "name": f"{repo_name}",
+            "default_branch_only": "true",
+        }
+
+        response = RequestHandler.safe_request_post(url, headers=headers, data=data)
+        self.write_to_file(f"fork_response_{repo_name}.json", response)
+
+        response_json = response.json()
+
+        if response.status_code == 202:
+            print(
+                f"Successfully fork repo name {repo_name}, here is the url: {response_json['html_url']}"
+            )
+            return True
+
+        print(f"ERROR: {response.text}")
+        print(f"Can't fork repo name {repo_name}")
+        return False
+
+    def delete_repo():
+        pass
+
+    @staticmethod
+    def parse_url(url) -> tuple:
+        """This function parse url to get repo_name and owner_name for fork()"""
+
+        owner_name = url.split("/")[3]
+        repo_name = url.split("/")[4]
+
+        return (owner_name, repo_name)
+
 
 def main():
     """Starting of the program"""
