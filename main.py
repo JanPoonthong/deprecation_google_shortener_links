@@ -10,13 +10,41 @@ class RequestHandler:
     """Handle HTTP requests"""
 
     @staticmethod
-    def safe_request(url: str, headers: dict, allow_redirects=True):
-        """Safely request a url"""
+    def safe_request_get(url: str, allow_redirects=True, **kwargs):
+        """Safely get request to url"""
+
+        headers = kwargs.get("headers", {})
 
         response = None
         try:
             response = requests.get(
                 url, headers=headers, allow_redirects=allow_redirects, timeout=3
+            )
+        except requests.exceptions.Timeout as error:
+            print(f"ERROR: Timed out for {url}")
+            raise Exception(error)
+
+        if response is None:
+            raise requests.exceptions.RequestException("Error: response is None")
+
+        return response
+
+    @staticmethod
+    def safe_request_post(url: str, allow_redirects=True, **kwargs):
+        """Safely post request to url"""
+
+        headers = kwargs.get("headers", {})
+        data = kwargs.get("data", {})
+        data = json.dumps(data)
+
+        response = None
+        try:
+            response = requests.post(
+                url,
+                headers=headers,
+                allow_redirects=allow_redirects,
+                timeout=3,
+                data=data,
             )
         except requests.exceptions.Timeout as error:
             print(f"ERROR: Timed out for {url}")
