@@ -91,15 +91,15 @@ class GitHubSearcher:
 
         headers = {"Authorization": f"Token {self.token}"}
 
-        response = RequestHandler.safe_request(url, headers=headers)
-        self.write_to_file(response)
+        response = RequestHandler.safe_request_get(url, headers=headers)
+        self.write_to_file("code_search_response_file.json", response)
         return response.json()
 
     @staticmethod
     def get_destination_url(url) -> str:
         """Get the 'location' from response header to get final destination url"""
 
-        response = RequestHandler.safe_request(url, headers={}, allow_redirects=False)
+        response = RequestHandler.safe_request_get(url, allow_redirects=False)
 
         location = response.headers["location"]
         return location
