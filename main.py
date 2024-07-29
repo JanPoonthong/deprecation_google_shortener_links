@@ -75,6 +75,9 @@ class GitHubSearcher:
             raise Exception(error)
         return json_data["items"]
 
+    @staticmethod
+    def write_to_file(file_name, response):
+        """DOCS"""
         try:
             with open(file_name, "w") as file:
                 file.write(response.text)
