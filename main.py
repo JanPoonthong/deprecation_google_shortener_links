@@ -16,7 +16,6 @@ class RequestHandler:
 
         headers = kwargs.get("headers", {})
 
-        response = None
         try:
             response = requests.get(
                 url, headers=headers, allow_redirects=allow_redirects, timeout=3
@@ -38,7 +37,6 @@ class RequestHandler:
         data = kwargs.get("data", {})
         data = json.dumps(data)
 
-        response = None
         try:
             response = requests.post(
                 url,
@@ -143,7 +141,7 @@ class GitHubSearcher:
         owner_name = url.split("/")[3]
         repo_name = url.split("/")[4]
 
-        return (owner_name, repo_name)
+        return owner_name, repo_name
 
 
 def main():
